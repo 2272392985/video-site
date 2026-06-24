@@ -340,6 +340,7 @@ async function main() {
   console.log("Recommendations linked.");
 
   // 7. Create Comments
+  // --- Video 1: Travel Video ---
   const c1 = await prisma.comment.create({
     data: {
       content: "画质真的太棒了，每一帧都可以当壁纸，强烈支持up主！",
@@ -359,7 +360,7 @@ async function main() {
   });
 
   // Reply to c2
-  await prisma.comment.create({
+  const c2_reply1 = await prisma.comment.create({
     data: {
       content: "祝你旅途愉快！如果后期有什么具体的拍摄点位问题，可以随时在群里或者评论区问我哈。",
       userId: user1.id,
@@ -369,6 +370,37 @@ async function main() {
     },
   });
 
+  // Nest reply to c2_reply1
+  await prisma.comment.create({
+    data: {
+      content: "up主太有耐心了，已经一键三连支持！",
+      userId: user3.id,
+      videoId: vTravel.id,
+      parentId: c2_reply1.id,
+      likeCount: 2,
+    },
+  });
+
+  const c_travel3 = await prisma.comment.create({
+    data: {
+      content: "请问这期视频里很多慢镜头是用什么设备拍的呀？防抖效果太好了。",
+      userId: user3.id,
+      videoId: vTravel.id,
+      likeCount: 8,
+    },
+  });
+
+  await prisma.comment.create({
+    data: {
+      content: "主要是用的索尼A7M4加上大疆RS3稳定器，部分升格镜头用的是手机120帧录制慢放的。",
+      userId: user1.id,
+      videoId: vTravel.id,
+      parentId: c_travel3.id,
+      likeCount: 6,
+    },
+  });
+
+  // --- Video 2: Movie Video ---
   const c3 = await prisma.comment.create({
     data: {
       content: "这期悬疑剧解说简直封神，把很多埋得极深的细节都串联起来了，看完恍然大悟！",
@@ -388,13 +420,169 @@ async function main() {
   });
 
   // Reply to c4
-  await prisma.comment.create({
+  const c4_reply1 = await prisma.comment.create({
     data: {
       content: "确实，当时我在影院看到那里也是浑身起鸡皮疙瘩，编剧脑洞极其强大！",
       userId: user2.id,
       videoId: vMovie.id,
       parentId: c4.id,
       likeCount: 12,
+    },
+  });
+
+  await prisma.comment.create({
+    data: {
+      content: "感觉导演在前面第32分钟那个镜头就已经暗示了，只是第一遍看太容易忽略了。",
+      userId: user3.id,
+      videoId: vMovie.id,
+      parentId: c4_reply1.id,
+      likeCount: 9,
+    },
+  });
+
+  // --- Video 3: Tech Video ---
+  const c_tech1 = await prisma.comment.create({
+    data: {
+      content: "这期关于AI Agent的科普非常透彻，看来未来人人都需要会一点提示词工程了。",
+      userId: user1.id,
+      videoId: vTech.id,
+      likeCount: 88,
+    },
+  });
+
+  const c_tech1_reply1 = await prisma.comment.create({
+    data: {
+      content: "确实，感觉未来很多重复性的脑力劳动都会被AI接管，我们必须不断学习了。",
+      userId: user2.id,
+      videoId: vTech.id,
+      parentId: c_tech1.id,
+      likeCount: 22,
+    },
+  });
+
+  await prisma.comment.create({
+    data: {
+      content: "同意！不过AI也是工具，核心还是看我们如何运用它来提高生产力并创造社会价值。",
+      userId: user3.id,
+      videoId: vTech.id,
+      parentId: c_tech1_reply1.id,
+      likeCount: 14,
+    },
+  });
+
+  const c_tech2 = await prisma.comment.create({
+    data: {
+      content: "Up主讲得太通俗易懂了，能不能做一期关于大语言模型底层的Transformer架构的精讲？",
+      userId: user3.id,
+      videoId: vTech.id,
+      likeCount: 45,
+    },
+  });
+
+  await prisma.comment.create({
+    data: {
+      content: "安排！下期就发一期关于Attention注意力机制和Transformer的零基础可视化精讲，记得关注哦！",
+      userId: user1.id,
+      videoId: vTech.id,
+      parentId: c_tech2.id,
+      likeCount: 19,
+    },
+  });
+
+  // --- Video 4: Food Video ---
+  const c_food1 = await prisma.comment.create({
+    data: {
+      content: "看完这个视频我立刻去厨房试了一下，炸出来的鸡翅真的外酥里嫩，太香了！",
+      userId: user2.id,
+      videoId: vFood.id,
+      likeCount: 41,
+    },
+  });
+
+  await prisma.comment.create({
+    data: {
+      content: "哈哈，火候和时间是关键，能成功就好，祝你胃口大开！",
+      userId: user1.id,
+      videoId: vFood.id,
+      parentId: c_food1.id,
+      likeCount: 8,
+    },
+  });
+
+  await prisma.comment.create({
+    data: {
+      content: "看着就流口水，果断收藏了，周末准备做给家人尝尝，特别是那个特调沙拉酱感觉是灵魂！",
+      userId: user3.id,
+      videoId: vFood.id,
+      likeCount: 28,
+    },
+  });
+
+  // --- Video 6: Music Video ---
+  const c_music1 = await prisma.comment.create({
+    data: {
+      content: "这个吉他指弹改编版太有味道了，比原版更有一种宁静祥和的感觉，单曲循环中！",
+      userId: user3.id,
+      videoId: vMusic.id,
+      likeCount: 95,
+    },
+  });
+
+  await prisma.comment.create({
+    data: {
+      content: "同感，尤其是副歌部分的泛音运用，简直是点睛之笔，听得浑身舒畅。",
+      userId: user2.id,
+      videoId: vMusic.id,
+      parentId: c_music1.id,
+      likeCount: 18,
+    },
+  });
+
+  const c_music2 = await prisma.comment.create({
+    data: {
+      content: "跪求高清吉他谱！想要自己练习一下，真的太喜欢这个伴奏版本了。",
+      userId: user1.id,
+      videoId: vMusic.id,
+      likeCount: 37,
+    },
+  });
+
+  await prisma.comment.create({
+    data: {
+      content: "吉他谱已经整理好发在我的主页动态里了，点击我头像就能看到，祝你练琴愉快！",
+      userId: user2.id, // user2 is the uploader of the music video (dbVideos[5] -> vMusic is uploaded by user2)
+      videoId: vMusic.id,
+      parentId: c_music2.id,
+      likeCount: 11,
+    },
+  });
+
+  // --- Video 7: Anime Video ---
+  const c_anime1 = await prisma.comment.create({
+    data: {
+      content: "这作的作画质量直接拉满了！特别是第三集的打斗，分镜和光影效果都是剧场版级别的。",
+      userId: user2.id,
+      videoId: vAnime.id,
+      likeCount: 63,
+    },
+  });
+
+  await prisma.comment.create({
+    data: {
+      content: "毕竟是顶级动画大厂制作，预算充足，作画监督也是业界大佬，看起来极其享受。",
+      userId: user3.id,
+      videoId: vAnime.id,
+      parentId: c_anime1.id,
+      likeCount: 15,
+    },
+  });
+
+  await prisma.comment.create({
+    data: {
+      content: "配乐也很绝，完美契合了末世氛围，每次战斗BGM一响就燃起来了！",
+      userId: user1.id,
+      videoId: vAnime.id,
+      likeCount: 29,
     },
   });
 
