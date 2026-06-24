@@ -4,10 +4,9 @@ let prisma: PrismaClient;
 
 function createPrismaClient() {
   const dbUrl = process.env.DATABASE_URL || "";
-  const isPostgres = dbUrl.startsWith("postgres://") || dbUrl.startsWith("postgresql://");
   
-  if (isPostgres) {
-    // Neon PostgreSQL Serverless adapter for production
+  if (dbUrl.startsWith("postgres://") || dbUrl.startsWith("postgresql://")) {
+    // Neon PostgreSQL Serverless adapter for production & local development
     const { neon } = require("@neondatabase/serverless");
     const { PrismaNeon } = require("@prisma/adapter-neon");
     
@@ -15,10 +14,8 @@ function createPrismaClient() {
     const adapter = new PrismaNeon(sql);
     return new PrismaClient({ adapter });
   } else {
-    // Local SQLite adapter for development
-    const { PrismaBetterSqlite3 } = require("@prisma/adapter-better-sqlite3");
-    const adapter = new PrismaBetterSqlite3({ url: "file:./dev.db" });
-    return new PrismaClient({ adapter });
+    // Fallback to standard PrismaClient
+    return new PrismaClient();
   }
 }
 

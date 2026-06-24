@@ -1,22 +1,18 @@
 import { PrismaClient } from "@prisma/client";
 import * as bcrypt from "bcryptjs";
 
-// Dynamically create Prisma client based on DATABASE_URL to support both SQLite and Postgres seeding
+// Dynamically create Prisma client based on DATABASE_URL to support Postgres seeding
 const dbUrl = process.env.DATABASE_URL || "";
-const isPostgres = dbUrl.startsWith("postgres://") || dbUrl.startsWith("postgresql://");
-
 let prisma: PrismaClient;
 
-if (isPostgres) {
+if (dbUrl.startsWith("postgres://") || dbUrl.startsWith("postgresql://")) {
   const { neon } = require("@neondatabase/serverless");
   const { PrismaNeon } = require("@prisma/adapter-neon");
   const sql = neon(dbUrl);
   const adapter = new PrismaNeon(sql);
   prisma = new PrismaClient({ adapter });
 } else {
-  const { PrismaBetterSqlite3 } = require("@prisma/adapter-better-sqlite3");
-  const adapter = new PrismaBetterSqlite3({ url: "file:./dev.db" });
-  prisma = new PrismaClient({ adapter });
+  prisma = new PrismaClient();
 }
 
 async function main() {
