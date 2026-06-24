@@ -1,14 +1,23 @@
 import { PrismaClient } from "@prisma/client";
 import * as bcrypt from "bcryptjs";
 
-// Import the db config directly to use the same logic
-// Note: since seed runs in typescript context, we can instantiate client directly or use the helper
-// But it's safer to instantiate direct Client for seeding, or we can use our helper.
-// Let's use the helper. Since db.ts uses relative path to better-sqlite3 database file, let's instantiate the local PrismaClient with SQLite adapter manually in the seed script to make sure it runs correctly from root.
-const { PrismaBetterSqlite3 } = require("@prisma/adapter-better-sqlite3");
+// Dynamically create Prisma client based on DATABASE_URL to support both SQLite and Postgres seeding
+const dbUrl = process.env.DATABASE_URL || "";
+const isPostgres = dbUrl.startsWith("postgres://") || dbUrl.startsWith("postgresql://");
 
-const adapter = new PrismaBetterSqlite3({ url: "file:./dev.db" });
-const prisma = new PrismaClient({ adapter });
+let prisma: PrismaClient;
+
+if (isPostgres) {
+  const { neon } = require("@neondatabase/serverless");
+  const { PrismaNeon } = require("@prisma/adapter-neon");
+  const sql = neon(dbUrl);
+  const adapter = new PrismaNeon(sql);
+  prisma = new PrismaClient({ adapter });
+} else {
+  const { PrismaBetterSqlite3 } = require("@prisma/adapter-better-sqlite3");
+  const adapter = new PrismaBetterSqlite3({ url: "file:./dev.db" });
+  prisma = new PrismaClient({ adapter });
+}
 
 async function main() {
   console.log("Start seeding...");
