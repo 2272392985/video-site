@@ -1,0 +1,666 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--bg-base);
+}
+
+.main {
+  flex: 1;
+  width: 100%;
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 30px 24px 80px 24px;
+}
+
+.contentGrid {
+  display: grid;
+  grid-template-columns: 1fr 350px;
+  gap: 32px;
+}
+
+/* ==========================================================================
+   Left Column: Player & Video Info CSS
+   ========================================================================== */
+.leftCol {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.playerContainer {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: black;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border-glass);
+}
+
+.player {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.infoSection {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+}
+
+.videoTitle {
+  font-family: 'Outfit', sans-serif;
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--text-primary);
+  line-height: 1.3;
+  margin-bottom: 16px;
+}
+
+.metaRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.stats {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.statItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13.5px;
+  color: var(--text-secondary);
+}
+
+.categoryBadge {
+  background: rgba(147, 51, 234, 0.15);
+  color: var(--primary-hover);
+  border: 1px solid rgba(147, 51, 234, 0.25);
+  padding: 3px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+}
+
+.interactions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.actionBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-glass);
+  padding: 8px 16px;
+  border-radius: var(--radius-full);
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.actionBtn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+  border-color: var(--text-muted);
+}
+
+.activeAction {
+  background: rgba(147, 51, 234, 0.15);
+  border-color: rgba(147, 51, 234, 0.4);
+  color: var(--primary-hover);
+}
+
+.activeAction:hover {
+  background: rgba(147, 51, 234, 0.25);
+  color: var(--primary-hover);
+}
+
+.uploaderRow {
+  display: flex;
+  align-items: center;
+  padding: 20px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.uploaderAvatar {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-full);
+  border: 2px solid var(--primary);
+  margin-right: 16px;
+}
+
+.uploaderInfo {
+  flex: 1;
+}
+
+.uploaderName {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.uploaderSub {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.followBtn {
+  background: var(--grad-primary);
+  color: white;
+  padding: 8px 20px;
+  border-radius: var(--radius-full);
+  font-size: 13.5px;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.2);
+}
+
+.followBtn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(124, 58, 237, 0.35);
+}
+
+.descriptionBox {
+  padding-top: 20px;
+}
+
+.descriptionText {
+  font-size: 14.5px;
+  color: #cbd5e1;
+  line-height: 1.7;
+  white-space: pre-wrap;
+}
+
+/* ==========================================================================
+   Comment Section CSS
+   ========================================================================== */
+.commentSection {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.commentHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-primary);
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.commentHeader h2 {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.commentForm {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.commentInput {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+  font-size: 14.5px;
+  color: var(--text-primary);
+  resize: vertical;
+  line-height: 1.5;
+  transition: var(--transition-fast);
+}
+
+.commentInput:focus {
+  border-color: var(--secondary);
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: 0 0 10px rgba(6, 182, 212, 0.2);
+}
+
+.formFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.wordCount {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.commentSubmit {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--grad-primary);
+  color: white;
+  padding: 8px 18px;
+  border-radius: var(--radius-full);
+  font-size: 13.5px;
+  font-weight: 600;
+}
+
+.commentSubmit:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-glow);
+}
+
+.loginPrompt {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px dashed var(--border-glass);
+  padding: 20px;
+  border-radius: var(--radius-md);
+  text-align: center;
+}
+
+.loginPrompt p {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.loginLink {
+  color: var(--primary-hover);
+  font-weight: 600;
+}
+
+.loginLink:hover {
+  text-decoration: underline;
+}
+
+.commentsList {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.commentItem {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+  padding-bottom: 20px;
+}
+
+.commentItem:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.commentMain {
+  display: flex;
+  gap: 16px;
+}
+
+.commentAvatar {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border-glass);
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.commentBody {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+
+.commentMeta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.commentUser {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.commentTime {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.commentContent {
+  font-size: 14.5px;
+  color: #e2e8f0;
+  line-height: 1.5;
+  word-break: break-all;
+}
+
+.commentActions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 4px;
+}
+
+.commentActionBtn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12.5px;
+  color: var(--text-muted);
+}
+
+.commentActionBtn:hover {
+  color: var(--text-primary);
+}
+
+.activeCommentAction {
+  color: var(--secondary);
+}
+
+.activeCommentAction:hover {
+  color: var(--secondary);
+}
+
+/* ==========================================================================
+   Replies nested list CSS
+   ========================================================================== */
+.repliesList {
+  margin-top: 16px;
+  margin-left: 56px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: rgba(255, 255, 255, 0.01);
+  border-left: 2px solid var(--border-glass);
+  padding-left: 16px;
+}
+
+.replyItem {
+  display: flex;
+  gap: 12px;
+  position: relative;
+}
+
+.replyArrow {
+  position: absolute;
+  left: -28px;
+  top: 4px;
+  color: var(--text-muted);
+  opacity: 0.5;
+}
+
+.replyAvatar {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border-glass);
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.replyBody {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+
+/* ==========================================================================
+   Reply Form CSS
+   ========================================================================== */
+.replyFormWrapper {
+  margin-left: 56px;
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.replyInput {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  font-size: 13.5px;
+  color: var(--text-primary);
+  resize: vertical;
+  line-height: 1.4;
+}
+
+.replyInput:focus {
+  border-color: var(--primary);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.replyFormActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.replyCancelBtn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-glass);
+  color: var(--text-secondary);
+  padding: 5px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  font-weight: 550;
+}
+
+.replyCancelBtn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+}
+
+.replySubmitBtn {
+  background: var(--primary);
+  color: white;
+  padding: 5px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.replySubmitBtn:hover {
+  background: var(--primary-hover);
+  box-shadow: 0 0 10px rgba(147, 51, 234, 0.3);
+}
+
+.noComments {
+  text-align: center;
+  padding: 30px 0;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+/* ==========================================================================
+   Right Column: Related Videos Sidebar CSS
+   ========================================================================== */
+.rightCol {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.sidebarTitle {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+  padding-bottom: 8px;
+  border-bottom: 1.5px solid var(--primary);
+}
+
+.sidebarGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.sideCard {
+  display: flex;
+  gap: 12px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-sm);
+  padding: 8px;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.sideCard:hover {
+  transform: translateX(4px);
+  border-color: rgba(147, 51, 234, 0.2);
+  background: var(--bg-surface-hover);
+}
+
+.sideThumbWrapper {
+  position: relative;
+  width: 120px;
+  aspect-ratio: 16 / 9;
+  border-radius: 4px;
+  overflow: hidden;
+  background: black;
+  flex-shrink: 0;
+}
+
+.sideThumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.sidePlayIcon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 20px;
+  height: 20px;
+  border-radius: var(--radius-full);
+  background: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.6;
+}
+
+.sideCard:hover .sidePlayIcon {
+  opacity: 1;
+}
+
+.sideDetails {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex: 1;
+  min-width: 0;
+}
+
+.sideTitle {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.sideUploader {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.sideMeta {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.noRelated {
+  text-align: center;
+  padding: 30px 0;
+  color: var(--text-muted);
+  font-size: 13.5px;
+}
+
+/* ==========================================================================
+   States CSS (Loading, Error)
+   ========================================================================== */
+.loadingContainer,
+.errorContainer {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 150px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  color: var(--text-secondary);
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(147, 51, 234, 0.1);
+  border-top-color: var(--primary);
+  border-radius: var(--radius-full);
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.errorContainer h2 {
+  color: var(--text-primary);
+  font-size: 22px;
+}
+
+.errorIcon {
+  color: var(--text-error);
+}
+
+.backBtn {
+  background: var(--grad-primary);
+  color: white;
+  padding: 10px 24px;
+  border-radius: var(--radius-full);
+  font-size: 14.5px;
+  font-weight: 600;
+  margin-top: 10px;
+}
+
+.backBtn:hover {
+  box-shadow: var(--shadow-glow);
+}
+
+@media (max-width: 992px) {
+  .contentGrid {
+    grid-template-columns: 1fr;
+  }
+}

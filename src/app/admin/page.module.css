@@ -1,0 +1,770 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--bg-base);
+}
+
+.main {
+  flex: 1;
+  width: 100%;
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 40px 24px 80px 24px;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 32px;
+  align-items: start;
+}
+
+/* ==========================================================================
+   Sidebar CSS
+   ========================================================================== */
+.sidebar {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  box-shadow: var(--shadow-sm);
+}
+
+.adminProfile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.adminAvatar {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-full);
+  background: rgba(147, 51, 234, 0.15);
+  border: 1.5px solid var(--primary);
+  color: var(--primary-hover);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.adminProfile h3 {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.adminProfile p {
+  font-size: 11.5px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.sidebarNav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.navBtn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-align: left;
+  transition: var(--transition-fast);
+}
+
+.navBtn:hover {
+  background: var(--bg-surface-hover);
+  color: var(--text-primary);
+}
+
+.activeNavBtn {
+  background: rgba(147, 51, 234, 0.12) !important;
+  color: var(--primary-hover) !important;
+  border-left: 3.5px solid var(--primary);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  padding-left: 12.5px;
+}
+
+/* ==========================================================================
+   Main Content Layout CSS
+   ========================================================================== */
+.content {
+  min-width: 0; /* Prevents flex children from stretching */
+}
+
+.tabPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.panelTitle {
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.panelTitle h2 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.panelTitle p {
+  font-size: 13.5px;
+  color: var(--text-secondary);
+}
+
+/* ==========================================================================
+   Dashboard Tab: Stats Grid & Chart CSS
+   ========================================================================== */
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.statCard {
+  background: var(--bg-surface);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border: 1px solid var(--border-glass);
+}
+
+.scHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.scIconUsers { color: #3b82f6; }
+.scIconVideos { color: #10b981; }
+.scIconPlays { color: #06b6d4; }
+.scIconLikes { color: #9333ea; }
+
+.scTitle {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.scValue {
+  font-family: 'Outfit', sans-serif;
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.scDesc {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.chartSection {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-glass);
+  padding: 24px;
+  border-radius: var(--radius-lg);
+}
+
+.chartHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-primary);
+  margin-bottom: 20px;
+}
+
+.chartHeader h3 {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+/* SVG Chart CSS */
+.chartWrapper {
+  width: 100%;
+}
+
+.svgChart {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.chartGridLine {
+  stroke: rgba(255, 255, 255, 0.05);
+  stroke-width: 1px;
+  stroke-dasharray: 4 4;
+}
+
+.chartStroke {
+  stroke: var(--primary);
+  stroke-width: 3px;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.chartArea {
+  fill: url(#chartGrad);
+  opacity: 0.15;
+  /* SVG Gradient is defined directly if available, fallback to fill color */
+  fill: rgba(147, 51, 234, 0.15);
+}
+
+.chartDot {
+  fill: var(--secondary);
+  stroke: var(--bg-surface);
+  stroke-width: 1.5px;
+}
+
+.chartText {
+  fill: var(--text-muted);
+  font-size: 10px;
+  font-weight: 500;
+}
+
+.distribSection {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+.distribCard {
+  background: var(--bg-surface);
+  padding: 24px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-glass);
+}
+
+.distribCard h3 {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: var(--text-primary);
+}
+
+.distribList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.distribItem {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.distribMeta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13.5px;
+}
+
+.distribMeta span {
+  color: var(--text-secondary);
+}
+
+.distribMeta strong {
+  color: var(--text-primary);
+}
+
+.progressBarBg {
+  width: 100%;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.progressBarFill {
+  height: 100%;
+  background: var(--grad-primary);
+  border-radius: var(--radius-full);
+}
+
+/* ==========================================================================
+   Audit Tab CSS
+   ========================================================================== */
+.auditList {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.auditCard {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-glass);
+  padding: 24px;
+}
+
+.acLayout {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.acPreview {
+  position: relative;
+  width: 240px;
+  aspect-ratio: 16 / 9;
+  background: black;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  border: 1px solid var(--border-glass);
+}
+
+.acVideo {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.acDuration {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  background: rgba(11, 12, 22, 0.7);
+  padding: 2px 6px;
+  font-size: 10px;
+  color: white;
+  border-radius: 2px;
+}
+
+.acDetails {
+  flex: 1;
+  min-width: 280px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.acTitleRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.acTitleRow h3 {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.badge {
+  padding: 4px 12px;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
+}
+
+.badgeSuccess {
+  background: rgba(16, 185, 129, 0.15);
+  color: var(--text-success);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+}
+
+.badgePending {
+  background: rgba(245, 158, 11, 0.15);
+  color: #f59e0b;
+  border: 1px solid rgba(245, 158, 11, 0.25);
+}
+
+.badgeDanger {
+  background: rgba(239, 68, 68, 0.15);
+  color: var(--text-error);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+}
+
+.acDesc {
+  font-size: 13.5px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.acMeta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--text-muted);
+  flex-wrap: wrap;
+}
+
+.auditForm {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 10px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.auditInput {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  font-size: 13px;
+  color: var(--text-primary);
+}
+
+.auditInput:focus {
+  border-color: var(--primary);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.auditActions {
+  display: flex;
+  gap: 12px;
+}
+
+.btnApprove,
+.btnReject {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 20px;
+  border-radius: var(--radius-full);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.btnApprove {
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  color: var(--text-success);
+}
+
+.btnApprove:hover {
+  background: var(--text-success);
+  color: white;
+}
+
+.btnReject {
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  color: var(--text-error);
+}
+
+.btnReject:hover {
+  background: var(--text-error);
+  color: white;
+}
+
+.auditedMeta {
+  margin-top: 8px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.acOpinion {
+  font-size: 13px;
+  color: #cbd5e1;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-glass);
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  line-height: 1.5;
+  margin-bottom: 8px;
+}
+
+.auditStatusDone {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* ==========================================================================
+   Table & User Grid CSS
+   ========================================================================== */
+.tableWrapper {
+  width: 100%;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.table th,
+.table td {
+  padding: 16px 20px;
+  font-size: 13.5px;
+}
+
+.table th {
+  background: rgba(0, 0, 0, 0.2);
+  font-weight: 700;
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--border-glass);
+}
+
+.table td {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+  color: var(--text-secondary);
+}
+
+.table tr:last-child td {
+  border-bottom: none;
+}
+
+.tableUser {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.tableUserAvatar {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border-glass);
+}
+
+.statusLabel {
+  display: inline-block;
+  padding: 2px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+}
+
+.statusNormal {
+  background: rgba(16, 185, 129, 0.12);
+  color: var(--text-success);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.statusDisabled {
+  background: rgba(239, 68, 68, 0.12);
+  color: var(--text-error);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.rowActionBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.btnDisable {
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.15);
+  color: var(--text-error);
+}
+
+.btnDisable:hover {
+  background: var(--text-error);
+  color: white;
+}
+
+.btnEnable {
+  background: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.15);
+  color: var(--text-success);
+}
+
+.btnEnable:hover {
+  background: var(--text-success);
+  color: white;
+}
+
+/* ==========================================================================
+   Category Tab Page Layout CSS
+   ========================================================================== */
+.catLayout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+.catFormCard {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-glass);
+  padding: 24px;
+  border-radius: var(--radius-lg);
+}
+
+.catFormCard h3 {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 20px;
+}
+
+.catForm {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.catFormGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.catFormGroup label {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.catInput,
+.catTextarea {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  font-size: 13.5px;
+  color: var(--text-primary);
+}
+
+.catInput:focus,
+.catTextarea:focus {
+  border-color: var(--primary);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.catTextarea {
+  resize: vertical;
+}
+
+.btnCreate {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: var(--grad-primary);
+  color: white;
+  padding: 10px;
+  border-radius: var(--radius-sm);
+  font-size: 13.5px;
+  font-weight: 600;
+}
+
+.btnCreate:hover {
+  box-shadow: var(--shadow-glow);
+}
+
+.catTableDesc {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.5;
+  max-width: 250px;
+}
+
+/* ==========================================================================
+   Dashboard Helpers (Alert, Loader, Spinner)
+   ========================================================================== */
+.messageBox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 18px;
+  border-radius: var(--radius-sm);
+  font-size: 13.5px;
+  margin-bottom: 24px;
+}
+
+.msgSuccess {
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  color: var(--text-success);
+}
+
+.msgError {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  color: var(--text-error);
+}
+
+.loader,
+.loadingContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 100px 0;
+  gap: 16px;
+  color: var(--text-secondary);
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(147, 51, 234, 0.1);
+  border-top-color: var(--primary);
+  border-radius: var(--radius-full);
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 24px;
+  text-align: center;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-lg);
+  gap: 12px;
+  color: var(--text-muted);
+}
+
+.empty h3 {
+  font-size: 16px;
+  color: var(--text-primary);
+}
+
+@media (max-width: 992px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+  .catLayout {
+    grid-template-columns: 1fr;
+  }
+}

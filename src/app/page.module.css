@@ -1,0 +1,525 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--bg-base);
+}
+
+.main {
+  flex: 1;
+  width: 100%;
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 30px 24px 80px 24px;
+}
+
+/* ==========================================================================
+   Carousel CSS
+   ========================================================================== */
+.carouselSection {
+  margin-bottom: 40px;
+}
+
+.carousel {
+  position: relative;
+  width: 100%;
+  height: 420px;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border-glass);
+}
+
+.carouselSlide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.8s ease-in-out, visibility 0.8s ease-in-out;
+  display: flex;
+  align-items: flex-end;
+  padding: 60px 80px;
+}
+
+.activeSlide {
+  opacity: 1;
+  visibility: visible;
+  z-index: 1;
+}
+
+.carouselContent {
+  max-width: 600px;
+  z-index: 2;
+  animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.carouselBadge {
+  display: inline-block;
+  background: var(--grad-sunset);
+  color: white;
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: var(--radius-full);
+  margin-bottom: 16px;
+  letter-spacing: 1px;
+}
+
+.carouselTitle {
+  font-family: 'Outfit', sans-serif;
+  font-size: 38px;
+  font-weight: 800;
+  color: white;
+  margin-bottom: 12px;
+  line-height: 1.2;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+.carouselDesc {
+  font-size: 15px;
+  color: #cbd5e1;
+  margin-bottom: 24px;
+  line-height: 1.6;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-shadow: 0 1px 5px rgba(0, 0, 0, 0.5);
+}
+
+.carouselMeta {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.metaItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13.5px;
+  color: #94a3b8;
+}
+
+.playBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: white;
+  color: var(--bg-base);
+  padding: 12px 28px;
+  border-radius: var(--radius-full);
+  font-size: 15px;
+  font-weight: 700;
+  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+  transition: var(--transition-fast);
+}
+
+.playBtn:hover {
+  transform: translateY(-2px);
+  background: var(--primary-hover);
+  color: white;
+  box-shadow: 0 6px 20px rgba(147, 51, 234, 0.4);
+}
+
+.carouselControlLeft,
+.carouselControlRight {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  width: 44px;
+  height: 44px;
+  background: rgba(20, 22, 40, 0.5);
+  border: 1px solid var(--border-glass);
+  color: white;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+}
+
+.carouselControlLeft:hover,
+.carouselControlRight:hover {
+  background: var(--primary);
+  border-color: var(--primary);
+}
+
+.carouselControlLeft {
+  left: 24px;
+}
+
+.carouselControlRight {
+  right: 24px;
+}
+
+.carouselIndicators {
+  position: absolute;
+  bottom: 24px;
+  right: 80px;
+  z-index: 10;
+  display: flex;
+  gap: 8px;
+}
+
+.indicator {
+  width: 8px;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.activeIndicator {
+  width: 24px;
+  background: var(--primary);
+}
+
+/* ==========================================================================
+   Category Tabs CSS
+   ========================================================================== */
+.categorySection {
+  margin-bottom: 30px;
+  width: 100%;
+}
+
+.categoryList {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+}
+
+.categoryList::-webkit-scrollbar {
+  height: 4px;
+}
+
+.categoryTab {
+  flex-shrink: 0;
+  background: var(--bg-surface);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-glass);
+  padding: 8px 20px;
+  border-radius: var(--radius-full);
+  font-size: 14.5px;
+  font-weight: 550;
+}
+
+.categoryTab:hover {
+  background: var(--bg-surface-hover);
+  color: var(--text-primary);
+  border-color: var(--text-muted);
+}
+
+.activeTab {
+  background: var(--grad-primary);
+  color: white;
+  border-color: transparent;
+  box-shadow: var(--shadow-glow);
+}
+
+/* ==========================================================================
+   Search Headers CSS
+   ========================================================================== */
+.searchHeader {
+  margin-bottom: 24px;
+  font-size: 16px;
+  color: var(--text-secondary);
+}
+
+.keywordHighlight {
+  color: var(--primary-hover);
+  font-weight: 600;
+}
+
+.searchCount {
+  margin-left: 8px;
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+/* ==========================================================================
+   Video Grid CSS
+   ========================================================================== */
+.videoSection {
+  width: 100%;
+}
+
+.videoGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+}
+
+.videoCard {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+              box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.videoCard:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-md), 0 10px 20px rgba(147, 51, 234, 0.1);
+  border-color: rgba(147, 51, 234, 0.3);
+}
+
+.thumbnailWrapper {
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%; /* 16:9 Aspect Ratio */
+  background: #000;
+  overflow: hidden;
+}
+
+.thumbnail {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--transition-slow);
+}
+
+.videoCard:hover .thumbnail {
+  transform: scale(1.08);
+}
+
+.thumbnailOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(11, 12, 22, 0.4);
+  opacity: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity var(--transition-fast);
+}
+
+.videoCard:hover .thumbnailOverlay {
+  opacity: 1;
+}
+
+.cardPlayIcon {
+  width: 50px;
+  height: 50px;
+  border-radius: var(--radius-full);
+  background: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: scale(0.8);
+  transition: transform var(--transition-fast);
+  box-shadow: 0 4px 15px rgba(147, 51, 234, 0.5);
+}
+
+.videoCard:hover .cardPlayIcon {
+  transform: scale(1);
+}
+
+.cardCategory {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: rgba(11, 12, 22, 0.7);
+  border: 1px solid var(--border-glass);
+  color: var(--text-primary);
+  padding: 2px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  backdrop-filter: blur(4px);
+}
+
+.cardDetails {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 10px;
+}
+
+.cardTitle {
+  font-size: 15.5px;
+  font-weight: 650;
+  color: var(--text-primary);
+  line-height: 1.4;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.cardDesc {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  margin-bottom: 4px;
+}
+
+.cardFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.uploader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.uploaderAvatar {
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border-glass);
+}
+
+.uploaderName {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  max-width: 90px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cardMeta {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.cardBottomMeta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11.5px;
+  color: var(--text-muted);
+}
+
+.cardDate {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ==========================================================================
+   Loader & Empty CSS
+   ========================================================================== */
+.loaderContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 100px 0;
+  gap: 16px;
+  color: var(--text-secondary);
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(147, 51, 234, 0.1);
+  border-top-color: var(--primary);
+  border-radius: var(--radius-full);
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.emptyContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 100px 24px;
+  text-align: center;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  max-width: 500px;
+  margin: 40px auto;
+  gap: 12px;
+}
+
+.emptyIcon {
+  color: var(--text-muted);
+}
+
+.emptyContainer h3 {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.emptyContainer p {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+@media (max-width: 768px) {
+  .carousel {
+    height: 320px;
+  }
+  .carouselSlide {
+    padding: 30px 40px;
+  }
+  .carouselTitle {
+    font-size: 26px;
+  }
+  .carouselIndicators {
+    right: 40px;
+  }
+  .carouselControlLeft {
+    left: 12px;
+  }
+  .carouselControlRight {
+    right: 12px;
+  }
+}

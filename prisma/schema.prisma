@@ -1,0 +1,183 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model User {
+  id         Int           @id @default(autoincrement())
+  username   String        @unique
+  password   String
+  email      String        @unique
+  avatarUrl  String?
+  regTime    DateTime      @default(now())
+  status     String        @default("正常") // 正常 / 禁用
+  adminId    Int?          // 负责管理的管理员 ID
+  manager    Admin?        @relation(fields: [adminId], references: [id], onDelete: SetNull)
+  
+  videos       Video[]
+  comments     Comment[]
+  favorites    Favorite[]
+  likes        Like[]
+  playRecords  PlayRecord[]
+  userActions  UserAction[]
+  transactions Transaction[]
+}
+
+model Admin {
+  id         Int       @id @default(autoincrement())
+  account    String    @unique
+  password   String
+  fullName   String
+  role       String    // 超级 / 普通 / 审核
+  entryTime  DateTime  @default(now())
+  status     String    @default("启用") // 启用 / 停用
+  
+  managedUsers           User[]
+  reviewedVideos         Video[]
+  createdCategories      Category[]
+  createdRecommendations Recommendation[]
+}
+
+model Category {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  description String?
+  createTime  DateTime @default(now())
+  creatorId   Int
+  creator     Admin    @relation(fields: [creatorId], references: [id], onDelete: Restrict)
+  
+  videos Video[]
+}
+
+model Video {
+  id            Int       @id @default(autoincrement())
+  title         String
+  description   String?
+  filePath      String
+  uploadTime    DateTime  @default(now())
+  playCount     Int       @default(0)
+  likeCount     Int       @default(0)
+  reviewStatus  String    @default("待审核") // 待审核 / 通过 / 驳回
+  categoryId    Int?
+  category      Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  uploaderId    Int
+  uploader      User      @relation(fields: [uploaderId], references: [id], onDelete: Cascade)
+  reviewerId    Int?
+  reviewer      Admin?    @relation(fields: [reviewerId], references: [id], onDelete: SetNull)
+  reviewTime    DateTime?
+  reviewOpinion String?
+  
+  comments        Comment[]
+  favorites       Favorite[]
+  likes           Like[]
+  playRecords     PlayRecord[]
+  userActions     UserAction[]
+  recommendations RecVideoRel[]
+}
+
+model Comment {
+  id          Int      @id @default(autoincrement())
+  content     String
+  publishTime DateTime @default(now())
+  likeCount   Int      @default(0)
+  userId      Int
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  videoId     Int
+  video       Video    @relation(fields: [videoId], references: [id], onDelete: Cascade)
+  parentId    Int?
+  parent      Comment? @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies     Comment[] @relation("CommentReplies")
+  
+  likes Like[]
+}
+
+model Favorite {
+  id      Int      @id @default(autoincrement())
+  favTime DateTime @default(now())
+  userId  Int
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  videoId Int
+  video   Video    @relation(fields: [videoId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, videoId])
+}
+
+model Like {
+  id       Int      @id @default(autoincrement())
+  likeTime DateTime @default(now())
+  likeType String   // 视频 / 评论
+  userId   Int
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  videoId  Int?
+  video    Video?   @relation(fields: [videoId], references: [id], onDelete: Cascade)
+  commentId Int?
+  comment  Comment? @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, likeType, videoId, commentId])
+}
+
+model PlayRecord {
+  id          Int       @id @default(autoincrement())
+  startTime   DateTime  @default(now())
+  endTime     DateTime?
+  progress    Int       @default(0) // 0 - 100
+  deviceType  String    // PC / 手机 / 平板 / TV / 其他
+  ipAddress   String
+  userId      Int
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  videoId     Int
+  video       Video     @relation(fields: [videoId], references: [id], onDelete: Cascade)
+}
+
+model UserAction {
+  id            Int      @id @default(autoincrement())
+  watchDuration Int      @default(0)
+  pauseCount    Int      @default(0)
+  seekCount     Int      @default(0)
+  actionTime    DateTime @default(now())
+  userId        Int
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  videoId       Int
+  video         Video     @relation(fields: [videoId], references: [id], onDelete: Cascade)
+}
+
+model Recommendation {
+  id          Int           @id @default(autoincrement())
+  name        String        @unique
+  description String?
+  createTime  DateTime      @default(now())
+  position    String
+  status      String        @default("启用") // 启用 / 下架
+  creatorId   Int
+  creator     Admin         @relation(fields: [creatorId], references: [id], onDelete: Restrict)
+  
+  videos RecVideoRel[]
+}
+
+model RecVideoRel {
+  id             Int            @id @default(autoincrement())
+  recId          Int
+  recommendation Recommendation @relation(fields: [recId], references: [id], onDelete: Cascade)
+  videoId        Int
+  video          Video          @relation(fields: [videoId], references: [id], onDelete: Cascade)
+  sortOrder      Int            @default(0)
+  
+  @@unique([recId, videoId])
+}
+
+model Transaction {
+  id        Int      @id @default(autoincrement())
+  amount    Float
+  time      DateTime @default(now())
+  type      String   // 充值 / 打赏
+  status    String   // 成功 / 失败 / 待支付
+  payMethod String   // 微信 / 支付宝 / 银行卡
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
