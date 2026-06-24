@@ -1,19 +1,17 @@
+import "dotenv/config";
 import { PrismaClient } from "@prisma/client";
 import * as bcrypt from "bcryptjs";
 
-// Dynamically create Prisma client based on DATABASE_URL to support Postgres seeding
-const dbUrl = process.env.DATABASE_URL || "";
-let prisma: PrismaClient;
+import ws from "ws";
+import { neonConfig } from "@neondatabase/serverless";
+import { PrismaNeon } from "@prisma/adapter-neon";
 
-if (dbUrl.startsWith("postgres://") || dbUrl.startsWith("postgresql://")) {
-  const { neon } = require("@neondatabase/serverless");
-  const { PrismaNeon } = require("@prisma/adapter-neon");
-  const sql = neon(dbUrl);
-  const adapter = new PrismaNeon(sql);
-  prisma = new PrismaClient({ adapter });
-} else {
-  prisma = new PrismaClient();
-}
+// Configure Neon for Node.js environment
+neonConfig.webSocketConstructor = ws;
+
+const dbUrl = process.env.DATABASE_URL || "";
+const adapter = new PrismaNeon({ connectionString: dbUrl });
+const prisma = new PrismaClient({ adapter });
 
 async function main() {
   console.log("Start seeding...");

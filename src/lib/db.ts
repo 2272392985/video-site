@@ -7,11 +7,13 @@ function createPrismaClient() {
   
   if (dbUrl.startsWith("postgres://") || dbUrl.startsWith("postgresql://")) {
     // Neon PostgreSQL Serverless adapter for production & local development
-    const { neon } = require("@neondatabase/serverless");
+    const { neonConfig } = require("@neondatabase/serverless");
     const { PrismaNeon } = require("@prisma/adapter-neon");
+    const ws = require("ws");
     
-    const sql = neon(dbUrl);
-    const adapter = new PrismaNeon(sql);
+    neonConfig.webSocketConstructor = ws;
+    
+    const adapter = new PrismaNeon({ connectionString: dbUrl });
     return new PrismaClient({ adapter });
   } else {
     // Fallback to standard PrismaClient
