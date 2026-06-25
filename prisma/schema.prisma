@@ -27,6 +27,8 @@ model User {
   playRecords  PlayRecord[]
   userActions  UserAction[]
   transactions Transaction[]
+  following    Follow[]      @relation("Follower")
+  followers    Follow[]      @relation("Followed")
 }
 
 model Admin {
@@ -180,4 +182,15 @@ model Transaction {
   payMethod String   // 微信 / 支付宝 / 银行卡
   userId    Int
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Follow {
+  id         Int      @id @default(autoincrement())
+  createTime DateTime @default(now())
+  followerId Int
+  follower   User     @relation("Follower", fields: [followerId], references: [id], onDelete: Cascade)
+  followedId Int
+  followed   User     @relation("Followed", fields: [followedId], references: [id], onDelete: Cascade)
+
+  @@unique([followerId, followedId])
 }

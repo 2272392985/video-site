@@ -47,8 +47,11 @@ export default function VideoDetailPage() {
   // Interactive states
   const [isLiked, setIsLiked] = useState(false);
   const [isFavorited, setIsFavorited] = useState(false);
+  const [isFollowing, setIsFollowing] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
   const [favoriteCount, setFavoriteCount] = useState(0);
+  const [followerCount, setFollowerCount] = useState(0);
+  const [followLoading, setFollowLoading] = useState(false);
   const [likedCommentIds, setLikedCommentIds] = useState<number[]>([]);
 
   // Input states
@@ -105,6 +108,42 @@ export default function VideoDetailPage() {
     }
     loadData();
   }, [videoId]);
+
+  // Load follow status whenever video or logged-in user changes
+  useEffect(() => {
+    if (!video) return;
+    fetch(`/api/follow?targetId=${video.uploader.id}`)
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.success) {
+          setIsFollowing(data.isFollowing);
+          setFollowerCount(data.followerCount);
+        }
+      });
+  }, [video, user]);
+
+  // Toggle Follow
+  const handleFollow = async () => {
+    if (!user) { router.push("/login"); return; }
+    if (!video || followLoading) return;
+    setFollowLoading(true);
+    try {
+      const res = await fetch("/api/follow", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ targetId: video.uploader.id }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setIsFollowing(data.isFollowing);
+        setFollowerCount(data.followerCount);
+      }
+    } catch (err) {
+      console.error("Toggle follow error:", err);
+    } finally {
+      setFollowLoading(false);
+    }
+  };
 
   // Toggle Like
   const handleLike = async () => {
@@ -355,10 +394,16 @@ export default function VideoDetailPage() {
                 />
                 <div className={styles.uploaderInfo}>
                   <h3 className={styles.uploaderName}>{video.uploader.username}</h3>
-                  <p className={styles.uploaderSub}>视频创作者</p>
+                  <p className={styles.uploaderSub}>视频创作者 · {followerCount} 粉丝</p>
                 </div>
                 {!user?.isAdmin && user?.id !== video.uploader.id && (
-                  <button className={styles.followBtn}>关注作者</button>
+                  <button
+                    className={`${styles.followBtn} ${isFollowing ? styles.followingBtn : ""}`}
+                    onClick={handleFollow}
+                    disabled={followLoading}
+                  >
+                    {followLoading ? "..." : isFollowing ? "✓ 已关注" : "+ 关注作者"}
+                  </button>
                 )}
               </div>
 

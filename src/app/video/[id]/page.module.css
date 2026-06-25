@@ -178,6 +178,27 @@
   box-shadow: 0 6px 16px rgba(124, 58, 237, 0.35);
 }
 
+.followBtn:disabled {
+  opacity: 0.6;
+  cursor: default;
+  transform: none;
+}
+
+.followingBtn {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-secondary);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: none;
+}
+
+.followingBtn:hover {
+  background: rgba(239, 68, 68, 0.12);
+  border-color: rgba(239, 68, 68, 0.35);
+  color: #f87171;
+  box-shadow: none;
+  transform: none;
+}
+
 .descriptionBox {
   padding-top: 20px;
 }
