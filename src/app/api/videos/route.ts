@@ -95,7 +95,7 @@ export async function GET(request: Request) {
   }
 }
 
-// 2. POST: Upload and submit video
+// 2. POST: Upload and submit video (supports both JSON videoUrl and FormData file upload)
 export async function POST(request: Request) {
   try {
     const session = await getAuthSession();
@@ -103,68 +103,79 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "请先登录" }, { status: 401 });
     }
 
-    const formData = await request.formData();
-    const title = formData.get("title") as string;
-    const description = formData.get("description") as string;
-    const categoryName = formData.get("category") as string;
-    const file = formData.get("file") as File;
+    const contentType = request.headers.get("content-type") || "";
 
-    if (!title || !categoryName) {
-      return NextResponse.json({ error: "视频标题和分类为必填项" }, { status: 400 });
+    let title = "";
+    let description = "";
+    let categoryName = "";
+    let filePath = "";
+
+    // ── Branch A: JSON body (external video URL) ────────────────────────────
+    if (contentType.includes("application/json")) {
+      const body = await request.json();
+      title = (body.title || "").trim();
+      description = (body.description || "").trim();
+      categoryName = (body.category || "").trim();
+      const videoUrl = (body.videoUrl || "").trim();
+
+      if (!title || !categoryName) {
+        return NextResponse.json({ error: "视频标题和分类为必填项" }, { status: 400 });
+      }
+      if (!videoUrl) {
+        return NextResponse.json({ error: "请填写视频链接" }, { status: 400 });
+      }
+      filePath = videoUrl;
+
+    // ── Branch B: FormData body (local file upload ≤ 4 MB) ──────────────────
+    } else {
+      const formData = await request.formData();
+      title = ((formData.get("title") as string) || "").trim();
+      description = ((formData.get("description") as string) || "").trim();
+      categoryName = ((formData.get("category") as string) || "").trim();
+      const file = formData.get("file") as File | null;
+
+      if (!title || !categoryName) {
+        return NextResponse.json({ error: "视频标题和分类为必填项" }, { status: 400 });
+      }
+
+      if (file && file.size > 0) {
+        // Size guard: 4 MB hard limit on server side
+        if (file.size > 4 * 1024 * 1024) {
+          return NextResponse.json({ error: "文件超过 4 MB 上限，请压缩后重试或改用外链投稿" }, { status: 413 });
+        }
+        try {
+          const bytes = await file.arrayBuffer();
+          const buffer = Buffer.from(bytes);
+          const uploadDir = path.join(process.cwd(), "public", "uploads");
+          if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
+          const fileName = `${Date.now()}_${file.name.replace(/\s+/g, "_")}`;
+          fs.writeFileSync(path.join(uploadDir, fileName), buffer);
+          filePath = `/uploads/${fileName}`;
+        } catch {
+          // Vercel serverless: filesystem is read-only — fall back to a stock video
+          const fallbacks = [
+            "https://assets.mixkit.co/videos/4634/4634-720.mp4",
+            "https://assets.mixkit.co/videos/5199/5199-720.mp4",
+            "https://assets.mixkit.co/videos/5215/5215-720.mp4",
+            "https://assets.mixkit.co/videos/4990/4990-720.mp4",
+            "https://assets.mixkit.co/videos/5069/5069-720.mp4",
+          ];
+          filePath = fallbacks[Math.floor(Math.random() * fallbacks.length)];
+        }
+      } else {
+        return NextResponse.json({ error: "请上传视频文件或填写视频外链" }, { status: 400 });
+      }
     }
 
-    // Find category
-    let category = await prisma.category.findUnique({
-      where: { name: categoryName }
-    });
-
-    // If category not found, use the first category or throw error
+    // ── Find category ────────────────────────────────────────────────────────
+    let category = await prisma.category.findUnique({ where: { name: categoryName } });
     if (!category) {
       const firstCat = await prisma.category.findFirst();
-      if (!firstCat) {
-        return NextResponse.json({ error: "系统无可用分类" }, { status: 400 });
-      }
+      if (!firstCat) return NextResponse.json({ error: "系统无可用分类" }, { status: 400 });
       category = firstCat;
     }
 
-    let filePath = "";
-
-    // Handle file upload
-    if (file && file.size > 0) {
-      try {
-        const bytes = await file.arrayBuffer();
-        const buffer = Buffer.from(bytes);
-
-        // Ensure upload dir exists
-        const uploadDir = path.join(process.cwd(), "public", "uploads");
-        if (!fs.existsSync(uploadDir)) {
-          fs.mkdirSync(uploadDir, { recursive: true });
-        }
-
-        const fileName = `${Date.now()}_${file.name.replace(/\s+/g, "_")}`;
-        const fullPath = path.join(uploadDir, fileName);
-        
-        fs.writeFileSync(fullPath, buffer);
-        filePath = `/uploads/${fileName}`;
-        console.log("File saved locally to", fullPath);
-      } catch (err: any) {
-        console.error("Local file save failed, falling back to stock video. Error:", err.message);
-        // Fallback to stock video URL for Vercel Serverless
-        const fallbackStockVideos = [
-          "https://assets.mixkit.co/videos/preview/mixkit-forest-stream-in-the-sunlight-529-large.mp4",
-          "https://assets.mixkit.co/videos/preview/mixkit-curious-cat-watching-tv-42526-large.mp4",
-          "https://assets.mixkit.co/videos/preview/mixkit-keyboard-of-a-lap-top-computer-42527-large.mp4",
-          "https://assets.mixkit.co/videos/preview/mixkit-pouring-coffee-into-a-cup-42528-large.mp4",
-          "https://assets.mixkit.co/videos/preview/mixkit-gaming-setup-neon-lights-42531-large.mp4"
-        ];
-        filePath = fallbackStockVideos[Math.floor(Math.random() * fallbackStockVideos.length)];
-      }
-    } else {
-      // No file uploaded: Use a fallback video
-      filePath = "https://assets.mixkit.co/videos/preview/mixkit-forest-stream-in-the-sunlight-529-large.mp4";
-    }
-
-    // Create video record in DB
+    // ── Create DB record ─────────────────────────────────────────────────────
     const newVideo = await prisma.video.create({
       data: {
         title,
@@ -172,21 +183,14 @@ export async function POST(request: Request) {
         filePath,
         uploaderId: session.id,
         categoryId: category.id,
-        reviewStatus: "待审核" // Default review status
-      }
+        reviewStatus: "待审核",
+      },
     });
 
-    return NextResponse.json({
-      success: true,
-      video: newVideo,
-      message: "上传成功，视频已提交审核"
-    });
+    return NextResponse.json({ success: true, video: newVideo, message: "视频已提交审核" });
 
   } catch (error: any) {
     console.error("Upload video error:", error);
-    return NextResponse.json(
-      { error: "上传视频失败: " + error.message },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "上传视频失败: " + error.message }, { status: 500 });
   }
 }
