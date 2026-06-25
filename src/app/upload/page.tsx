@@ -12,8 +12,19 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
-const MAX_FILE_MB = 4;
+const MAX_FILE_MB = 3;
 const MAX_FILE_BYTES = MAX_FILE_MB * 1024 * 1024;
+
+/** Convert a File to a base64 data URL so it can be stored in the DB and played back anywhere. */
+function fileToDataUrl(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
 
 const SAMPLE_URLS = [
   { label: "旅行风光", url: "https://assets.mixkit.co/videos/4634/4634-720.mp4" },
@@ -92,9 +103,11 @@ export default function UploadPage() {
 
     if (mode === "url") {
       if (!videoUrl.trim()) { setErrorMsg("请填写视频链接"); return; }
-      try { new URL(videoUrl.trim()); } catch {
-        setErrorMsg("视频链接格式不正确，请输入完整的 https:// 链接");
-        return;
+      if (!videoUrl.trim().startsWith("data:")) {
+        try { new URL(videoUrl.trim()); } catch {
+          setErrorMsg("视频链接格式不正确，请输入完整的 https:// 链接");
+          return;
+        }
       }
     } else {
       if (!file) { setErrorMsg("请选择要上传的视频文件"); return; }
@@ -117,13 +130,19 @@ export default function UploadPage() {
           }),
         });
       } else {
-        // FormData request for file upload mode
-        const fd = new FormData();
-        fd.append("title", title.trim());
-        fd.append("description", description.trim());
-        fd.append("category", categoryName);
-        fd.append("file", file!);
-        res = await fetch("/api/videos", { method: "POST", body: fd });
+        // Convert file to base64 data URL, then send as JSON
+        // This avoids Vercel's read-only filesystem — the data URL is stored directly in the DB
+        const dataUrl = await fileToDataUrl(file!);
+        res = await fetch("/api/videos", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            title: title.trim(),
+            description: description.trim(),
+            category: categoryName,
+            videoUrl: dataUrl,  // data:video/mp4;base64,...
+          }),
+        });
       }
 
       const data = await res.json();

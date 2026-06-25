@@ -124,6 +124,10 @@ export async function POST(request: Request) {
       if (!videoUrl) {
         return NextResponse.json({ error: "请填写视频链接" }, { status: 400 });
       }
+      // Accept both https:// URLs and data: base64 URLs (from local file upload)
+      if (!videoUrl.startsWith("http://") && !videoUrl.startsWith("https://") && !videoUrl.startsWith("data:")) {
+        return NextResponse.json({ error: "视频链接格式不正确" }, { status: 400 });
+      }
       filePath = videoUrl;
 
     // ── Branch B: FormData body (local file upload ≤ 4 MB) ──────────────────
